@@ -7,7 +7,8 @@ import numpy as np
 from tkinter import *
 import time
 
-def double_pendulum_euler(theta1_0, theta2_0, omega1_0, omega2_0, m1, m2, l1, l2, g, dt, n_etapes):
+def double_pendule_euler(theta1_0, theta2_0, omega1_0, omega2_0, m1, m2, l1, l2, g, dt, n_etapes):
+    '''Résolution de l'équation différentielle avec la méthode d'euler'''
     theta1, theta2 = theta1_0, theta2_0
     omega1, omega2 = omega1_0, omega2_0
     theta1_results = np.zeros(n_etapes)
@@ -16,6 +17,7 @@ def double_pendulum_euler(theta1_0, theta2_0, omega1_0, omega2_0, m1, m2, l1, l2
     for i in range(n_etapes):
         theta1_results[i] = theta1
         theta2_results[i] = theta2
+        # équation différentielle :
         alpha1 = (-g*(2*m1+m2)*np.sin(theta1)-m2*g*np.sin(theta1-2*theta2)-2*np.sin(theta1-theta2)*m2*(omega2**2*l2+omega1**2*l1*np.cos(theta1-theta2)))/(l1*(2*m1+m2-m2*np.cos(2*theta1-2*theta2)))
         alpha2 = (2*np.sin(theta1-theta2)*(omega1**2*l1*(m1+m2)+g*(m1+m2)*np.cos(theta1)+omega2**2*l2*m2*np.cos(theta1-theta2)))/(l2*(2*m1+m2-m2*np.cos(2*theta1-2*theta2)))
         omega1 += alpha1 * dt
@@ -39,6 +41,7 @@ time_start = 0
 # Fonctions qui intégrent la simulation dans une interface graphique
 
 def lancer_simulation(trace=False):
+    ''' Lancement de la simulation'''
     global theta1_results, theta2_results, time_start, n_etapes,couleurs
     
     theta1_0 = eval(entree_theta1_0.get())
@@ -49,7 +52,7 @@ def lancer_simulation(trace=False):
     dt = eval(entree_dt.get())
     g = eval(entree_g.get())
 
-    theta1_results, theta2_results = double_pendulum_euler(theta1_0, theta2_0, omega1_0, omega2_0, m1, m2, l1, l2, g, dt, n_etapes)
+    theta1_results, theta2_results = double_pendule_euler(theta1_0, theta2_0, omega1_0, omega2_0, m1, m2, l1, l2, g, dt, n_etapes)
     time_start = time.time()
     if len(liste_point1) == 0:
         couleurs= LISTE_COULEURS.copy()
@@ -64,6 +67,7 @@ LISTE_COULEURS = ['purple','red','blue','yellow','orange','green','red']
 couleurs = []
 
 def simulation(trace = False, clr = None):
+    '''Tracé de la simulation sur l'interface'''
     global time_start, last_step, couleurs
     if clr == None:
         clr = couleurs.pop()
